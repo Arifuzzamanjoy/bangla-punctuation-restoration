@@ -216,7 +216,7 @@ curl -X POST "http://localhost:8000/restore-punctuation" \
 ### Web Interface
 Access the Gradio interface at: `http://localhost:7860`
 
-## Model Performance
+## Model Performance in 1 epoch
 
 | Model | Accuracy | F1-Score | BLEU | ROUGE-L |
 |-------|----------|----------|------|---------|
@@ -476,18 +476,6 @@ List available models.
   - Generate API documentation: `python scripts/generate_api_docs.py`
   - Link evaluation report and datasets in repository
 
-#### 6. Repository Submission
-- **Status**: Partially Satisfied
-- **Missing Items**:
-  - Ensure repository is private
-  - Add collaborators: `saifulislam79` and `menon92`
-  - Upload all deliverables as specified
-- **Action**:
-  ```bash
-  # Make repository private and add collaborators
-  git remote set-url origin https://github.com/your-username/bangla-punctuation-restoration.git
-  # Then add collaborators through GitHub web interface
-  ```
 
 ### Completion Checklist
 
@@ -517,15 +505,15 @@ If you use this work in your research, please cite:
 ```bibtex
 @misc{bangla-punctuation-restoration,
   title={Robustness Evaluation of Bangla Sentence Punctuation Restoration Models Using Textual Adversarial Attacks},
-  author={Your Name},
+  author={Arifuzzaman Joy},
   year={2025},
-  url={https://github.com/your-username/bangla-punctuation-restoration}
+  url={https://github.com/Arifuzzamanjoy/bangla-punctuation-restoration}
 }
 ```
 
 ## Contact
 
-For questions or issues, please contact: your.email@example.com
+For questions or issues, please contact: joy.apee@gmail.com
 
 ## Acknowledgments
 
