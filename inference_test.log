@@ -1,0 +1,10 @@
+INFO:__main__:Loading trained model...
+ERROR:__main__:Error during model testing: 'tokenclassification_model'
+Traceback (most recent call last):
+  File "/home/storage/AI/trading/bangla-punctuation-restoration/test_model_inference.py", line 31, in test_model_inference
+    model = BaselineModel(model_type="token_classification")
+  File "/home/storage/AI/trading/bangla-punctuation-restoration/src/models/baseline_model.py", line 46, in __init__
+    self.config = config or MODEL_CONFIG[f"{model_type.replace('_', '')}_model"]
+KeyError: 'tokenclassification_model'
+Testing trained model inference...
+✗ Model inference test failed!

@@ -1,0 +1,41 @@
+{
+  "generation_config": {
+    "min_sentences": 20000,
+    "wikipedia_articles": 100,
+    "news_portals": [
+      "https://www.prothomalo.com/",
+      "https://www.anandabazar.com/",
+      "https://www.bbc.com/bengali",
+      "https://www.jugantor.com/"
+    ],
+    "literary_works_dir": "literary_works",
+    "request_timeout": 10,
+    "max_retries": 3
+  },
+  "dataset_statistics": {
+    "train": {
+      "num_examples": 6042,
+      "features": [
+        "unpunctuated_text",
+        "punctuated_text"
+      ]
+    },
+    "validation": {
+      "num_examples": 755,
+      "features": [
+        "unpunctuated_text",
+        "punctuated_text"
+      ]
+    },
+    "test": {
+      "num_examples": 756,
+      "features": [
+        "unpunctuated_text",
+        "punctuated_text"
+      ]
+    }
+  },
+  "generation_time": "2025-07-05T00:24:39.512072",
+  "total_examples": 7553,
+  "output_directory": "data/generated_dataset"
+}

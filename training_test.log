@@ -1,0 +1,32 @@
+INFO:__main__:Loading dataset...
+INFO:src.data.dataset_loader:Loading generated dataset: ha-pr-bn-your_name-generated
+WARNING:src.data.dataset_loader:Failed to load from Hugging Face: Dataset 'ha-pr-bn-your_name-generated' doesn't exist on the Hub or cannot be accessed.
+INFO:src.data.dataset_loader:Loading from local path: data/generated_dataset
+INFO:__main__:Dataset loaded successfully. Keys: dict_keys(['train', 'validation', 'test'])
+INFO:__main__:Using 100 training and 50 validation examples
+INFO:__main__:Initializing baseline model...
+INFO:__main__:Starting quick training test...
+Some weights of AlbertForTokenClassification were not initialized from the model checkpoint at ai4bharat/indic-bert and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+INFO:src.models.baseline_model:Successfully initialized model: ai4bharat/indic-bert
+INFO:src.models.baseline_model:Training token_classification model...
+Running quick training test...
+Map:   0%|          | 0/100 [00:00<?, ? examples/s]Map: 100%|██████████| 100/100 [00:00<00:00, 5791.08 examples/s]
+Map:   0%|          | 0/50 [00:00<?, ? examples/s]Map: 100%|██████████| 50/50 [00:00<00:00, 4973.68 examples/s]
+/home/storage/AI/trading/bangla-punctuation-restoration/src/models/baseline_model.py:305: FutureWarning: `tokenizer` is deprecated and will be removed in version 5.0.0 for `Trainer.__init__`. Use `processing_class` instead.
+  trainer = Trainer(
+  0%|          | 0/25 [00:00<?, ?it/s]  4%|▍         | 1/25 [00:00<00:09,  2.61it/s] 16%|█▌        | 4/25 [00:00<00:02,  8.98it/s] 28%|██▊       | 7/25 [00:00<00:01, 12.84it/s] 40%|████      | 10/25 [00:00<00:00, 15.78it/s] 52%|█████▏    | 13/25 [00:00<00:00, 17.22it/s] 64%|██████▍   | 16/25 [00:01<00:00, 19.03it/s] 76%|███████▌  | 19/25 [00:01<00:00, 19.42it/s] 88%|████████▊ | 22/25 [00:01<00:00, 19.91it/s]100%|██████████| 25/25 [00:01<00:00, 20.48it/s]
+  0%|          | 0/13 [00:00<?, ?it/s][A
+ 46%|████▌     | 6/13 [00:00<00:00, 54.02it/s][A
+ 92%|█████████▏| 12/13 [00:00<00:00, 54.55it/s][A100%|██████████| 25/25 [00:19<00:00, 20.48it/s]
+100%|██████████| 13/13 [00:17<00:00, 54.55it/s][A/home/storage/AI/trading/.venv/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1706: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])
+                                               
+                                               [A100%|██████████| 25/25 [00:57<00:00, 20.48it/s]
+100%|██████████| 13/13 [00:55<00:00, 54.55it/s][A
+                                               [A                                               100%|██████████| 25/25 [00:57<00:00, 20.48it/s]100%|██████████| 25/25 [00:57<00:00,  2.31s/it]
+INFO:src.models.baseline_model:Model saved to models/baseline
+INFO:__main__:Quick training test completed successfully!
+{'eval_loss': 0.4781714975833893, 'eval_accuracy': 0.98296875, 'eval_precision': 0.163828125, 'eval_recall': 0.16666666666666666, 'eval_f1': 0.16523520605153258, 'eval_runtime': 55.5648, 'eval_samples_per_second': 0.9, 'eval_steps_per_second': 0.234, 'epoch': 1.0}
+{'train_runtime': 57.7293, 'train_samples_per_second': 1.732, 'train_steps_per_second': 0.433, 'train_loss': 0.8870282745361329, 'epoch': 1.0}
+✓ Quick training test passed!
