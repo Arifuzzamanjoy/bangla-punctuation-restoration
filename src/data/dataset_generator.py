@@ -16,6 +16,9 @@ from huggingface_hub import login, HfApi
 from tqdm import tqdm
 import logging
 
+# Import the enhanced web scraper
+from .web_scraper import BanglaWebScraper
+
 # Handle config import for different execution contexts
 try:
     from config import GENERATION_CONFIG, DATASET_CONFIG, HF_CONFIG
@@ -47,6 +50,9 @@ class BanglaDatasetGenerator:
         self.config = config or GENERATION_CONFIG
         self.dataset_config = DATASET_CONFIG
         self.hf_token = os.getenv(HF_CONFIG["token_env_var"])
+        
+        # Initialize the enhanced web scraper
+        self.web_scraper = BanglaWebScraper(config)
     
     def remove_punctuation(self, text: str) -> str:
         """Remove punctuation marks from text"""
@@ -104,46 +110,56 @@ class BanglaDatasetGenerator:
         logger.info(f"Extracted {len(sentences)} sentences from Wikipedia")
         return sentences
     
-    def scrape_news_portals(self, urls: Optional[List[str]] = None) -> List[str]:
-        """Scrape Bengali news portals"""
-        if urls is None:
-            urls = self.config["news_portals"]
+    def scrape_comprehensive_internet_data(self) -> List[str]:
+        """
+        Scrape comprehensive Bangla data from the entire internet
         
-        logger.info(f"Scraping {len(urls)} news portals...")
+        Returns:
+            List of sentences scraped from diverse internet sources
+        """
+        logger.info("Starting comprehensive internet data collection...")
+        
+        # Use the enhanced web scraper for comprehensive data collection
+        sentences = self.web_scraper.scrape_comprehensive_bangla_data(
+            wikipedia_articles=self.config.get("wikipedia_articles", 200),
+            news_articles_per_site=self.config.get("news_articles_per_site", 20),
+            include_blogs=self.config.get("include_blogs", True),
+            include_educational=self.config.get("include_educational", True)
+        )
+        
+        logger.info(f"Collected {len(sentences)} sentences from comprehensive internet scraping")
+        return sentences
+    
+    def scrape_social_media_content(self) -> List[str]:
+        """
+        Scrape Bangla content from social media and discussion platforms
+        Note: This would require API access for platforms like Facebook, Twitter, etc.
+        """
         sentences = []
         
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
+        # Placeholder for social media scraping
+        # In a real implementation, you would:
+        # 1. Use official APIs (Twitter API, Facebook Graph API, etc.)
+        # 2. Scrape public discussion forums
+        # 3. Collect content from comment sections
         
-        for url in tqdm(urls, desc="Scraping news portals"):
-            try:
-                response = requests.get(
-                    url, 
-                    headers=headers, 
-                    timeout=self.config["request_timeout"]
-                )
-                soup = BeautifulSoup(response.text, 'html.parser')
-                
-                # Extract paragraphs and article content
-                content_selectors = ['p', 'article', '.content', '.article-body', '.story-content']
-                
-                for selector in content_selectors:
-                    elements = soup.select(selector)
-                    for element in elements:
-                        text = element.get_text().strip()
-                        if text and len(text) > 20:  # Minimum text length
-                            article_sentences = self.extract_sentences(text)
-                            sentences.extend(article_sentences)
-                
-                # Add delay between requests
-                import time
-                time.sleep(1)
-                
-            except Exception as e:
-                logger.warning(f"Error scraping {url}: {e}")
+        logger.info("Social media scraping not implemented (requires API access)")
+        return sentences
+    
+    def scrape_academic_content(self) -> List[str]:
+        """
+        Scrape academic and research content in Bangla
+        """
+        sentences = []
         
-        logger.info(f"Extracted {len(sentences)} sentences from news portals")
+        academic_sources = [
+            "https://www.researchgate.net/search/publication?q=bengali",
+            "https://scholar.google.com/scholar?q=bengali+language",
+            # Add more academic sources
+        ]
+        
+        # Implementation would scrape academic papers, theses, etc.
+        logger.info("Academic content scraping not fully implemented")
         return sentences
     
     def load_literary_works(self, directory: Optional[str] = None) -> List[str]:
@@ -222,6 +238,62 @@ class BanglaDatasetGenerator:
         
         return synthetic_sentences
     
+    def filter_and_deduplicate_sentences(self, sentences: List[str]) -> List[str]:
+        """
+        Apply quality filtering and deduplication to sentences
+        
+        Args:
+            sentences: List of sentences to filter
+            
+        Returns:
+            Filtered and deduplicated sentences
+        """
+        logger.info("Applying quality filtering and deduplication...")
+        
+        # Remove duplicates while preserving order
+        unique_sentences = []
+        seen = set()
+        
+        for sentence in sentences:
+            # Normalize for comparison (remove extra spaces, etc.)
+            normalized = re.sub(r'\s+', ' ', sentence).strip().lower()
+            
+            if normalized not in seen:
+                seen.add(normalized)
+                
+                # Quality checks
+                words = sentence.split()
+                word_count = len(words)
+                
+                # Check length
+                if not (self.dataset_config["min_sentence_length"] <= word_count <= 
+                       self.dataset_config["max_sentence_length"]):
+                    continue
+                
+                # Check for sufficient Bangla content
+                bangla_chars = sum(1 for c in sentence if '\u0980' <= c <= '\u09FF')
+                total_chars = sum(1 for c in sentence if c.isalpha())
+                
+                if total_chars == 0 or (bangla_chars / total_chars) < 0.6:
+                    continue
+                
+                # Check for proper punctuation
+                if not any(punct in sentence for punct in ['।', '?', '!', ',', ';', ':']):
+                    continue
+                
+                # Avoid sentences with too many numbers/URLs/emails
+                if (len(re.findall(r'\d+', sentence)) > 3 or
+                    'http' in sentence.lower() or
+                    '@' in sentence):
+                    continue
+                
+                unique_sentences.append(sentence)
+        
+        logger.info(f"Filtered: {len(sentences)} -> {len(unique_sentences)} sentences")
+        logger.info(f"Removed {len(sentences) - len(unique_sentences)} duplicates/low-quality sentences")
+        
+        return unique_sentences
+    
     def create_dataset_splits(self, sentences: List[str]) -> DatasetDict:
         """Create train/validation/test splits from sentences"""
         # Remove duplicates and shuffle
@@ -267,42 +339,67 @@ class BanglaDatasetGenerator:
     
     def generate_dataset(self) -> DatasetDict:
         """Generate a complete dataset from all sources"""
-        logger.info("Starting dataset generation...")
+        logger.info("Starting comprehensive dataset generation...")
         
         # Collect sentences from different sources
         all_sentences = []
         
-        # 1. Wikipedia (formal text)
+        # 1. Comprehensive Internet Scraping (NEW - Most comprehensive)
+        try:
+            internet_sentences = self.scrape_comprehensive_internet_data()
+            all_sentences.extend(internet_sentences)
+            logger.info(f"Internet scraping: {len(internet_sentences)} sentences")
+        except Exception as e:
+            logger.error(f"Error in comprehensive internet scraping: {e}")
+        
+        # 2. Wikipedia (traditional method as backup)
         try:
             wiki_sentences = self.scrape_wikipedia_articles()
-            all_sentences.extend(wiki_sentences)
+            # Filter out duplicates from internet scraping
+            new_wiki = [s for s in wiki_sentences if s not in all_sentences]
+            all_sentences.extend(new_wiki)
+            logger.info(f"Wikipedia (additional): {len(new_wiki)} sentences")
         except Exception as e:
             logger.error(f"Error scraping Wikipedia: {e}")
         
-        # 2. News portals (formal text)
-        try:
-            news_sentences = self.scrape_news_portals()
-            all_sentences.extend(news_sentences)
-        except Exception as e:
-            logger.error(f"Error scraping news: {e}")
-        
-        # 3. Literary works
+        # 3. Literary works (local files)
         try:
             literary_sentences = self.load_literary_works()
             all_sentences.extend(literary_sentences)
+            logger.info(f"Literary works: {len(literary_sentences)} sentences")
         except Exception as e:
             logger.error(f"Error loading literary works: {e}")
         
+        # 4. Social media content (placeholder for future implementation)
+        try:
+            social_sentences = self.scrape_social_media_content()
+            all_sentences.extend(social_sentences)
+            logger.info(f"Social media: {len(social_sentences)} sentences")
+        except Exception as e:
+            logger.error(f"Error scraping social media: {e}")
+        
+        # 5. Academic content (placeholder for future implementation)
+        try:
+            academic_sentences = self.scrape_academic_content()
+            all_sentences.extend(academic_sentences)
+            logger.info(f"Academic content: {len(academic_sentences)} sentences")
+        except Exception as e:
+            logger.error(f"Error scraping academic content: {e}")
+        
         logger.info(f"Collected {len(all_sentences)} sentences from all sources")
         
-        # 4. Generate synthetic sentences if needed
+        # 6. Generate synthetic sentences if needed
         min_sentences = self.config["min_sentences"]
         if len(all_sentences) < min_sentences:
             logger.info(f"Need {min_sentences - len(all_sentences)} more sentences, generating synthetic ones...")
             all_sentences = self.generate_synthetic_sentences(all_sentences, min_sentences)
         
+        # 7. Quality filtering and deduplication
+        logger.info("Applying quality filtering and deduplication...")
+        filtered_sentences = self.filter_and_deduplicate_sentences(all_sentences)
+        
         # Create dataset splits
-        dataset = self.create_dataset_splits(all_sentences)
+        dataset = self.create_dataset_splits(filtered_sentences)
         
         logger.info("Dataset generation completed!")
         logger.info(f"Train: {len(dataset['train'])} examples")

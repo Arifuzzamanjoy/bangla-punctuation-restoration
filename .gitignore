@@ -65,9 +65,21 @@ logs/
 *.bin
 *.pt
 *.pth
+*.safetensors
 models/*.bin
 models/*.pt
 models/*.pth
+models/*.safetensors
+
+# Large model directories
+*_model/
+results/
+quick_fix_model/
+simple_test_model/
+comprehensive_test_model_*/
+
+# Optimizer files (large)
+optimizer.pt
 
 # Data files (can be large)
 data/raw/

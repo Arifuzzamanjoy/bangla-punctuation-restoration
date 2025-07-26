@@ -120,16 +120,31 @@ ADVERSARIAL_CONFIG = {
 # Dataset Generation Configuration
 GENERATION_CONFIG = {
     "min_sentences": 20000,
-    "wikipedia_articles": 100,
+    "wikipedia_articles": 200,  # Increased for comprehensive collection
+    "news_articles_per_site": 25,  # NEW: Articles per news site
+    "include_blogs": True,  # NEW: Include blog content
+    "include_educational": True,  # NEW: Include educational content
+    "include_social_media": False,  # NEW: Social media (requires API)
+    "include_academic": False,  # NEW: Academic content
     "news_portals": [
         "https://www.prothomalo.com/",
         "https://www.anandabazar.com/",
         "https://www.bbc.com/bengali",
         "https://www.jugantor.com/",
+        "https://www.kalerkantho.com/",
+        "https://www.ittefaq.com.bd/",
+        "https://www.samakal.com/",
+        "https://bangla.bdnews24.com/",
+        "https://www.jagonews24.com/",
     ],
     "literary_works_dir": "literary_works",
-    "request_timeout": 10,
+    "request_timeout": 15,  # Increased timeout
     "max_retries": 3,
+    "respect_robots_txt": True,  # NEW: Respect robots.txt
+    "delay_between_requests": 2.0,  # NEW: Delay between requests (seconds)
+    "max_concurrent_requests": 3,  # NEW: Maximum concurrent requests
+    "quality_filter": True,  # NEW: Apply quality filtering
+    "deduplicate": True,  # NEW: Remove duplicates
 }
 
 # Evaluation Configuration

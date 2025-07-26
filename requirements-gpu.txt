@@ -1,0 +1,24 @@
+# GPU-specific requirements (install only if you have NVIDIA GPU)
+# Install these after installing CUDA and cuDNN
+
+# PyTorch with CUDA support
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch>=2.1.0+cu118
+torchvision>=0.16.0+cu118
+torchaudio>=2.1.0+cu118
+
+# ONNX Runtime with GPU support
+onnxruntime-gpu>=1.16.0
+
+# Transformers with GPU optimizations
+accelerate>=0.24.0
+
+# Flash Attention (requires CUDA)
+flash-attn>=2.3.0
+
+# Optional: TensorRT (requires manual installation)
+# See: https://docs.nvidia.com/deeplearning/tensorrt/install-guide/index.html
+# tensorrt>=8.6.0
+
+# Optional: Triton Inference Server (use Docker image instead)
+# docker pull nvcr.io/nvidia/tritonserver:23.10-py3

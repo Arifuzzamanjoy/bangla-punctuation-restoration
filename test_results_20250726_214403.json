@@ -1,0 +1,77 @@
+{
+  "test_config": {
+    "name": "ai4bharat/indic-bert",
+    "max_length": 64,
+    "num_epochs": 2,
+    "batch_size": 4,
+    "learning_rate": 3e-05,
+    "weight_decay": 0.01
+  },
+  "dataset_size": 100,
+  "accuracy": 0.0,
+  "total_examples": 15,
+  "correct_predictions": 0,
+  "sample_results": [
+    {
+      "input": "মাছ পানিতে থাকে",
+      "ground_truth": "মাছ পানিতে থাকে।",
+      "prediction": "মাছ পানিতে থাকে",
+      "correct": false
+    },
+    {
+      "input": "পিঁপড়া লাইন করে চলে",
+      "ground_truth": "পিঁপড়া লাইন করে চলে।",
+      "prediction": "পিঁপড়া লাইন করে চলে",
+      "correct": false
+    },
+    {
+      "input": "মৌমাছি মধু তৈরি করে",
+      "ground_truth": "মৌমাছি মধু তৈরি করে।",
+      "prediction": "মৌমাছি মধু তৈরি করে",
+      "correct": false
+    },
+    {
+      "input": "প্রজাপতি ফুলে ফুলে উড়ে",
+      "ground_truth": "প্রজাপতি ফুলে ফুলে উড়ে।",
+      "prediction": "প্রজাপতি ফুলে ফুলে উড়ে",
+      "correct": false
+    },
+    {
+      "input": "শিশুরা খেলাধুলা করে",
+      "ground_truth": "শিশুরা খেলাধুলা করে।",
+      "prediction": "শিশুরা খেলাধুলা করে",
+      "correct": false
+    },
+    {
+      "input": "যুবকরা কাজ করে",
+      "ground_truth": "যুবকরা কাজ করে।",
+      "prediction": "যুবকরা কাজ করে",
+      "correct": false
+    },
+    {
+      "input": "বৃদ্ধরা বিশ্রাম নেন",
+      "ground_truth": "বৃদ্ধরা বিশ্রাম নেন।",
+      "prediction": "বৃদ্ধরা বিশ্রাম নেন",
+      "correct": false
+    },
+    {
+      "input": "মহিলারা সংসার করেন",
+      "ground_truth": "মহিলারা সংসার করেন।",
+      "prediction": "মহিলারা সংসার করেন",
+      "correct": false
+    },
+    {
+      "input": "পুরুষরা বাইরে কাজ করে",
+      "ground_truth": "পুরুষরা বাইরে কাজ করে।",
+      "prediction": "পুরুষরা বাইরে কাজ করে",
+      "correct": false
+    },
+    {
+      "input": "সবাই একসাথে থাকি",
+      "ground_truth": "সবাই একসাথে থাকি।",
+      "prediction": "সবাই একসাথে থাকি",
+      "correct": false
+    }
+  ],
+  "model_path": "comprehensive_test_model_20250726_214259"
+}
