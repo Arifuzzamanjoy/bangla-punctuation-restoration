@@ -14,28 +14,28 @@
   },
   "dataset_statistics": {
     "train": {
-      "num_examples": 6042,
+      "num_examples": 5931,
       "features": [
         "unpunctuated_text",
         "punctuated_text"
       ]
     },
     "validation": {
-      "num_examples": 755,
+      "num_examples": 741,
       "features": [
         "unpunctuated_text",
         "punctuated_text"
       ]
     },
     "test": {
-      "num_examples": 756,
+      "num_examples": 742,
       "features": [
         "unpunctuated_text",
         "punctuated_text"
       ]
     }
   },
-  "generation_time": "2025-07-05T00:24:39.512072",
-  "total_examples": 7553,
+  "generation_time": "2025-07-26T19:25:45.591521",
+  "total_examples": 7414,
   "output_directory": "data/generated_dataset"
 }
